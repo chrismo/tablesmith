@@ -29,4 +29,17 @@ describe Batch do
     TEXT
     [].to_batch.text_table.to_s.should == expected
   end
+
+  it 'should handle a simple two row Array' do
+    a = [%w(a b c), %w(d e f)]
+    actual = a
+    expected = <<-TABLE
++---+---+---+
+| a | b | c |
++---+---+---+
+| d | e | f |
++---+---+---+
+    TABLE
+    actual.to_batch.text_table.to_s.should == expected
+  end
 end

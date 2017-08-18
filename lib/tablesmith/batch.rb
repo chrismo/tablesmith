@@ -33,23 +33,19 @@ module Tablesmith
 
       normalize_keys(rows)
 
-      rows.map! do |row|
-        # this sort gives preference to column_order then falls back to alphabetic for leftovers.
-        # this is handy when columns auto-generate based on hash data.
-        row.sort do |a, b|
-          a_col_name, b_col_name = [a.first, b.first]
-          a_col_index, b_col_index = [column_order.index(a_col_name), column_order.index(b_col_name)]
+      sort_columns(rows)
 
-          if a_col_index.nil? && b_col_index.nil?
-            a_col_name <=> b_col_name
-          else
-            (a_col_index || 999) <=> (b_col_index || 999)
-          end
-        end
-      end
-
-      rows = create_headers(rows) + (rows.map { |r| r.map(&:last) })
+      rows = create_headers(rows) + (rows.map { |row| row_values(row) })
       rows.to_text_table
+    end
+
+    # override in subclass or mixin
+    def row_values(row)
+      row
+    end
+
+    # override in subclass or mixin
+    def sort_columns(rows)
     end
 
     # override in subclass or mixin
@@ -58,10 +54,13 @@ module Tablesmith
     end
 
     # override in subclass or mixin
+    def normalize_keys(rows)
+    end
+
+    # override in subclass or mixin
     def column_order
       []
     end
-
 
     # TODO: resolve with column_order
     def columns
@@ -69,7 +68,8 @@ module Tablesmith
     end
 
     def create_headers(rows)
-      column_names = rows.first.map(&:first)
+      top_row = rows.first
+      column_names = top_row.first.is_a?(Array) ? top_row.map(&:first) : top_row
       grouped_headers(column_names) + [apply_column_aliases(column_names), :separator]
     end
 
@@ -100,12 +100,6 @@ module Tablesmith
         {:value => value, :align => :center}
       end
     end
-
-    # not all resulting rows will have data in all columns, so make sure all rows pad out missing columns
-    def normalize_keys(rows)
-      all_keys = rows.map { |hash_row| hash_row.keys }.flatten.uniq
-      rows.map { |hash_row| all_keys.each { |key| hash_row[key] ||= '' } }
-    end
   end
 
   class Column
@@ -131,12 +125,18 @@ class Array
   def to_batch
     b = Tablesmith::Batch.new(self)
 
-    if b.first && b.first.is_a?(ActiveRecord::Base)
-      b.extend Tablesmith::ActiveRecordSource
+    if defined?(ActiveRecord) && defined?(ActiveRecord::Base)
+      if b.first && b.first.is_a?(ActiveRecord::Base)
+        b.extend Tablesmith::ActiveRecordSource
+      end
     end
 
     if b.first && b.first.is_a?(Hash)
       b.extend Tablesmith::HashRowsSource
+    end
+
+    if b.first && b.first.is_a?(Array)
+      b.extend Tablesmith::ArrayRowsSource
     end
 
     b

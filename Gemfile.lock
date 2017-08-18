@@ -1,12 +1,11 @@
 PATH
   remote: .
   specs:
-    tablesmith (0.1.0)
+    tablesmith (0.1.1)
       text-table
 
 GEM
   remote: https://rubygems.org/
-  remote: http://geminabox.lsqa.net/
   specs:
     activemodel (3.2.22.5)
       activesupport (= 3.2.22.5)
@@ -64,4 +63,4 @@ DEPENDENCIES
   tablesmith!
 
 BUNDLED WITH
-   1.15.1
+   1.15.3
