@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tablesmith (0.1.1)
+    tablesmith (0.1.2)
       text-table
 
 GEM
