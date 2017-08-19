@@ -46,6 +46,36 @@ describe 'ActiveRecordSource' do
     b.text_table.to_s.should == expected
   end
 
+  it 'auto reloads records' do
+    p = Person.create(:first_name => 'chrismo', :age => 43)
+
+    expected = <<-TABLE
++------------+-----+-----------+
+| first_name | age | year_born |
++------------+-----+-----------+
+| chrismo    | 43  | 1971      |
++------------+-----+-----------+
+    TABLE
+    b = [p].to_batch
+
+    def b.serializable_options
+      {:only => [:first_name, :age], :methods => [:year_born]}
+    end
+    b.text_table.to_s.should == expected
+
+    # update the value through another instance.
+    Person.last.update_column(:age, 46)
+
+    expected = <<-TABLE
++------------+-----+-----------+
+| first_name | age | year_born |
++------------+-----+-----------+
+| chrismo    | 46  | 1968      |
++------------+-----+-----------+
+    TABLE
+    b.text_table.to_s.should == expected
+  end
+
   it 'handles column name partials' do
     p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
     expected = <<-TABLE

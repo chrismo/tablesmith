@@ -2,14 +2,10 @@ module Tablesmith::ActiveRecordSource
   include Tablesmith::HashRowsBase
 
   def convert_item_to_hash_row(item)
-    # TODO: reload ActiveRecords automagically
-    if item.respond_to? :serializable_hash
-      hash = item.serializable_hash(process_all_columns(serializable_options))
-      hash = fold_un_sourced_attributes_into_source_hash(first.class.name.underscore.to_sym, hash)
-      flatten_inner_hashes(hash)
-    else
-      super
-    end
+    item.reload unless item.new_record?
+    hash = item.serializable_hash(process_all_columns(serializable_options))
+    hash = fold_un_sourced_attributes_into_source_hash(first.class.name.underscore.to_sym, hash)
+    flatten_inner_hashes(hash)
   end
 
   def column_order

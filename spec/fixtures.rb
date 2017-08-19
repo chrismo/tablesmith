@@ -3,6 +3,8 @@ require 'active_record'
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ':memory:'
 
 class Person < ActiveRecord::Base
+  serialize :custom_attributes
+
   connection.create_table table_name, :force => true do |t|
     t.string :first_name
     t.string :last_name
@@ -38,6 +40,8 @@ class Supplier < ActiveRecord::Base
   has_one :account_history, :through => :account
 
   accepts_nested_attributes_for :account, :account_history
+
+  serialize :custom_attributes
 
   connection.create_table table_name, :force => true do |t|
     t.integer :account_id
