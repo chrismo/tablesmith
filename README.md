@@ -26,8 +26,8 @@ Happy to learn about something else already out there, but have struggled to fin
 that doesn't require some sort of setup. I want drop-in ready-to-go table output for Hashes,
 Arrays and ActiveRecord objects.
 
-Other gems that I've tried out that are awesome and do much more than what Tablesmith does,
-but don't seem to specialize in what I want.
+Here's a quick list of other gems that I've tried out that are awesome and do much more than what Tablesmith does,
+but don't seem to specialize in what I want:
 
   - Hirb
   - text-table
