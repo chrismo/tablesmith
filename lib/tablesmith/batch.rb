@@ -1,6 +1,7 @@
 require 'text-table'
 
 module Tablesmith
+  # TODO - rename Batch to Table?
   class Batch < Array
     def method_missing(meth_id, *args)
       count = 1
