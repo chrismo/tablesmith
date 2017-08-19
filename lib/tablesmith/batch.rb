@@ -118,6 +118,10 @@ module Tablesmith
     def full_unaliased_name
       "#{@source ? "#{@source}." : ''}#{@name}"
     end
+
+    def to_s
+      "#{@source}.#{@name}#{' as ' + @alias if @alias}"
+    end
   end
 end
 

@@ -1,4 +1,6 @@
 module Tablesmith::ActiveRecordSource
+  include Tablesmith::HashRowsBase
+
   def convert_item_to_hash_row(item)
     # TODO: reload ActiveRecords automagically
     if item.respond_to? :serializable_hash
@@ -19,7 +21,7 @@ module Tablesmith::ActiveRecordSource
     {}
   end
 
-  # TODO: memoize
+  # TODO: memoize - otherwise it's recalculated on every row
   def process_all_columns(serializable_options)
     @columns = []
 
