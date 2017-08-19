@@ -1,0 +1,4 @@
+TargetRubyVersion: 2.3
+
+Layout/IndentHeredoc:
+  Enabled: true

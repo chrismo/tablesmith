@@ -22,10 +22,10 @@ describe Table do
   end
 
   it 'should handle empty Array' do
-    expected = <<-TEXT
-+---------+
-| (empty) |
-+---------+
+    expected = <<~TEXT
+      +---------+
+      | (empty) |
+      +---------+
     TEXT
     [].to_table.text_table.to_s.should == expected
   end
@@ -33,12 +33,12 @@ describe Table do
   it 'should handle a simple two row Array' do
     a = [%w(a b c), %w(d e f)]
     actual = a
-    expected = <<-TABLE
-+---+---+---+
-| a | b | c |
-+---+---+---+
-| d | e | f |
-+---+---+---+
+    expected = <<~TABLE
+      +---+---+---+
+      | a | b | c |
+      +---+---+---+
+      | d | e | f |
+      +---+---+---+
     TABLE
     actual.to_table.text_table.to_s.should == expected
   end

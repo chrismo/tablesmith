@@ -4,25 +4,25 @@ describe 'ActiveRecordSource' do
   it 'outputs text table of multiple ActiveRecords' do
     a = Person.new.tap { |c| c.first_name = 'A' }
     b = Person.new.tap { |c| c.first_name = 'B' }
-    expected = <<-TABLE
-+----+------------+-----------+-----+-------------------+
-| id | first_name | last_name | age | custom_attributes |
-+----+------------+-----------+-----+-------------------+
-|    | A          |           |     |                   |
-|    | B          |           |     |                   |
-+----+------------+-----------+-----+-------------------+
+    expected = <<~TABLE
+      +----+------------+-----------+-----+-------------------+
+      | id | first_name | last_name | age | custom_attributes |
+      +----+------------+-----------+-----+-------------------+
+      |    | A          |           |     |                   |
+      |    | B          |           |     |                   |
+      +----+------------+-----------+-----+-------------------+
     TABLE
     [a, b].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs ActiveRecord in column order' do
     p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
-    expected = <<-TABLE
-+----+------------+-----------+-----+-------------------+
-| id | first_name | last_name | age | custom_attributes |
-+----+------------+-----------+-----+-------------------+
-| 1  | chris      | mo        | 43  |                   |
-+----+------------+-----------+-----+-------------------+
+    expected = <<~TABLE
+      +----+------------+-----------+-----+-------------------+
+      | id | first_name | last_name | age | custom_attributes |
+      +----+------------+-----------+-----+-------------------+
+      | 1  | chris      | mo        | 43  |                   |
+      +----+------------+-----------+-----+-------------------+
     TABLE
     [p].to_table.text_table.to_s.should == expected
   end
@@ -30,12 +30,12 @@ describe 'ActiveRecordSource' do
   it 'handles custom serialization options in batch' do
     p = Person.create(:first_name => 'chrismo', :age => 43)
 
-    expected = <<-TABLE
-+------------+-----+-----------+
-| first_name | age | year_born |
-+------------+-----+-----------+
-| chrismo    | 43  | 1971      |
-+------------+-----+-----------+
+    expected = <<~TABLE
+      +------------+-----+-----------+
+      | first_name | age | year_born |
+      +------------+-----+-----------+
+      | chrismo    | 43  | 1971      |
+      +------------+-----+-----------+
     TABLE
     b = [p].to_table
 
@@ -49,12 +49,12 @@ describe 'ActiveRecordSource' do
   it 'auto reloads records' do
     p = Person.create(:first_name => 'chrismo', :age => 43)
 
-    expected = <<-TABLE
-+------------+-----+-----------+
-| first_name | age | year_born |
-+------------+-----+-----------+
-| chrismo    | 43  | 1971      |
-+------------+-----+-----------+
+    expected = <<~TABLE
+      +------------+-----+-----------+
+      | first_name | age | year_born |
+      +------------+-----+-----------+
+      | chrismo    | 43  | 1971      |
+      +------------+-----+-----------+
     TABLE
     b = [p].to_table
 
@@ -66,24 +66,24 @@ describe 'ActiveRecordSource' do
     # update the value through another instance.
     Person.last.update_column(:age, 46)
 
-    expected = <<-TABLE
-+------------+-----+-----------+
-| first_name | age | year_born |
-+------------+-----+-----------+
-| chrismo    | 46  | 1968      |
-+------------+-----+-----------+
+    expected = <<~TABLE
+      +------------+-----+-----------+
+      | first_name | age | year_born |
+      +------------+-----+-----------+
+      | chrismo    | 46  | 1968      |
+      +------------+-----+-----------+
     TABLE
     b.text_table.to_s.should == expected
   end
 
   it 'handles column name partials' do
     p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
-    expected = <<-TABLE
-+-------+------+-----+
-| first | last | age |
-+-------+------+-----+
-| chris | mo   | 43  |
-+-------+------+-----+
+    expected = <<~TABLE
+      +-------+------+-----+
+      | first | last | age |
+      +-------+------+-----+
+      | chris | mo   | 43  |
+      +-------+------+-----+
     TABLE
     b = [p].to_table
 
@@ -96,12 +96,12 @@ describe 'ActiveRecordSource' do
 
   it 'handles column name partials across words' do
     p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
-    expected = <<-TABLE
-+--------+--------+-----+
-| f_name | l_name | age |
-+--------+--------+-----+
-| chris  | mo     | 43  |
-+--------+--------+-----+
+    expected = <<~TABLE
+      +--------+--------+-----+
+      | f_name | l_name | age |
+      +--------+--------+-----+
+      | chris  | mo     | 43  |
+      +--------+--------+-----+
     TABLE
     b = [p].to_table
 
@@ -114,12 +114,12 @@ describe 'ActiveRecordSource' do
 
   it 'handles explicit column aliases' do
     p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
-    expected = <<-TABLE
-+---------------+----------+-----+
-| primer_nombre | apellido | age |
-+---------------+----------+-----+
-| chris         | mo       | 43  |
-+---------------+----------+-----+
+    expected = <<~TABLE
+      +---------------+----------+-----+
+      | primer_nombre | apellido | age |
+      +---------------+----------+-----+
+      | chris         | mo       | 43  |
+      +---------------+----------+-----+
     TABLE
     b = [p].to_table
 
@@ -144,14 +144,14 @@ describe 'ActiveRecordSource' do
       {:only => [:name], :include => {:account => {:only => [:name, :tax_identification_number]}}}
     end
 
-    expected = <<-TABLE
-+----------+---------+---------------------------+
-| supplier |               account               |
-+----------+---------+---------------------------+
-|   name   |  name   | tax_identification_number |
-+----------+---------+---------------------------+
-| supplier | account | 123456                    |
-+----------+---------+---------------------------+
+    expected = <<~TABLE
+      +----------+---------+---------------------------+
+      | supplier |               account               |
+      +----------+---------+---------------------------+
+      |   name   |  name   | tax_identification_number |
+      +----------+---------+---------------------------+
+      | supplier | account | 123456                    |
+      +----------+---------+---------------------------+
     TABLE
 
     b.text_table.to_s.should == expected
@@ -166,14 +166,14 @@ describe 'ActiveRecordSource' do
       {:only => [:name], :include => {:account => {:only => [:name, :tax_id]}}}
     end
 
-    expected = <<-TABLE
-+----------+---------+--------+
-| supplier |     account      |
-+----------+---------+--------+
-|   name   |  name   | tax_id |
-+----------+---------+--------+
-| supplier | account | 123456 |
-+----------+---------+--------+
+    expected = <<~TABLE
+      +----------+---------+--------+
+      | supplier |     account      |
+      +----------+---------+--------+
+      |   name   |  name   | tax_id |
+      +----------+---------+--------+
+      | supplier | account | 123456 |
+      +----------+---------+--------+
     TABLE
 
     b.text_table.to_s.should == expected
@@ -191,14 +191,14 @@ describe 'ActiveRecordSource' do
     b = [p].to_table
 
     a = format_ids([p.id])[0]
-    expected = <<-TABLE
-+----+------------+-----------+-----+----------------------------------------+
-|              person               |           custom_attributes            |
-+----+------------+-----------+-----+----------------------------------------+
-| id | first_name | last_name | age |                 skills                 |
-+----+------------+-----------+-----+----------------------------------------+
-|#{a}| chrismo    |           |     | {:instrument=>"piano", :style=>"jazz"} |
-+----+------------+-----------+-----+----------------------------------------+
+    expected = <<~TABLE
+      +----+------------+-----------+-----+----------------------------------------+
+      |              person               |           custom_attributes            |
+      +----+------------+-----------+-----+----------------------------------------+
+      | id | first_name | last_name | age |                 skills                 |
+      +----+------------+-----------+-----+----------------------------------------+
+      |#{a}| chrismo    |           |     | {:instrument=>"piano", :style=>"jazz"} |
+      +----+------------+-----------+-----+----------------------------------------+
     TABLE
 
     b.text_table.to_s.should == expected
@@ -212,16 +212,16 @@ describe 'ActiveRecordSource' do
 
     a, b, c = format_ids([p2.id, p1.id, p3.id])
 
-    expected = <<-TABLE
-+----+------------+-----------+-----+------------+-----------+
-|              person               |   custom_attributes    |
-+----+------------+-----------+-----+------------+-----------+
-| id | first_name | last_name | age | instrument |   style   |
-+----+------------+-----------+-----+------------+-----------+
-|#{a}| romer      |           |     | kazoo      |           |
-|#{b}| chrismo    |           |     | piano      | jazz      |
-|#{c}| glv        |           |     |            |           |
-+----+------------+-----------+-----+------------+-----------+
+    expected = <<~TABLE
+      +----+------------+-----------+-----+------------+-----------+
+      |              person               |   custom_attributes    |
+      +----+------------+-----------+-----+------------+-----------+
+      | id | first_name | last_name | age | instrument |   style   |
+      +----+------------+-----------+-----+------------+-----------+
+      |#{a}| romer      |           |     | kazoo      |           |
+      |#{b}| chrismo    |           |     | piano      | jazz      |
+      |#{c}| glv        |           |     |            |           |
+      +----+------------+-----------+-----+------------+-----------+
     TABLE
 
     batch.text_table.to_s.should == expected
@@ -234,15 +234,15 @@ describe 'ActiveRecordSource' do
 
     a, b = format_ids([p1.id, p2.id])
 
-    expected = <<-TABLE
-+----+------------+-----------+-----+--------+------------+--------+
-|              person               |      custom_attributes       |
-+----+------------+-----------+-----+--------+------------+--------+
-| id | first_name | last_name | age | hobby  | instrument | style  |
-+----+------------+-----------+-----+--------+------------+--------+
-|#{a}| chrismo    |           |     |        | piano      | jazz   |
-|#{b}| romer      |           |     | games  |            |        |
-+----+------------+-----------+-----+--------+------------+--------+
+    expected = <<~TABLE
+      +----+------------+-----------+-----+--------+------------+--------+
+      |              person               |      custom_attributes       |
+      +----+------------+-----------+-----+--------+------------+--------+
+      | id | first_name | last_name | age | hobby  | instrument | style  |
+      +----+------------+-----------+-----+--------+------------+--------+
+      |#{a}| chrismo    |           |     |        | piano      | jazz   |
+      |#{b}| romer      |           |     | games  |            |        |
+      +----+------------+-----------+-----+--------+------------+--------+
     TABLE
 
     batch.text_table.to_s.should == expected
@@ -256,12 +256,12 @@ describe 'ActiveRecordSource' do
       {:only => [:name], :include => {:account => {:only => [:name, :tax_id]}}}
     end
 
-    expected = <<-TABLE
-+----------+
-|   name   |
-+----------+
-| supplier |
-+----------+
+    expected = <<~TABLE
+      +----------+
+      |   name   |
+      +----------+
+      | supplier |
+      +----------+
     TABLE
 
     b.text_table.to_s.should == expected
@@ -281,14 +281,14 @@ describe 'ActiveRecordSource' do
       {:only => [:name, :custom_attributes], :methods => [:foo]}
     end
 
-    expected = <<-TABLE
-+----------+------+-------------------+
-|    supplier     | custom_attributes |
-+----------+------+-------------------+
-|   name   | foo  |         a         |
-+----------+------+-------------------+
-| sup. two |      | 1                 |
-+----------+------+-------------------+
+    expected = <<~TABLE
+      +----------+------+-------------------+
+      |    supplier     | custom_attributes |
+      +----------+------+-------------------+
+      |   name   | foo  |         a         |
+      +----------+------+-------------------+
+      | sup. two |      | 1                 |
+      +----------+------+-------------------+
     TABLE
 
     b.text_table.to_s.should == expected
@@ -301,12 +301,12 @@ describe 'ActiveRecordSource' do
     b = [p].to_table
 
     # little weird looking at this point, but at least not broken
-    expected = <<-TABLE
-+----+--------+-------------------+---------------------+
-| id |  name  | custom_attributes |      children       |
-+----+--------+-------------------+---------------------+
-| 1  | parent |                   | [{"name"=>"child"}] |
-+----+--------+-------------------+---------------------+
+    expected = <<~TABLE
+      +----+--------+-------------------+---------------------+
+      | id |  name  | custom_attributes |      children       |
+      +----+--------+-------------------+---------------------+
+      | 1  | parent |                   | [{"name"=>"child"}] |
+      +----+--------+-------------------+---------------------+
     TABLE
 
     def b.serializable_options
