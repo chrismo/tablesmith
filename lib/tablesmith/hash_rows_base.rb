@@ -2,7 +2,7 @@
 module Tablesmith::HashRowsBase
   # not all resulting rows will have data in all columns, so make sure all rows pad out missing columns
   def normalize_keys(rows)
-    all_keys = rows.map { |hash_row| hash_row.keys }.flatten.uniq
+    all_keys = rows.map(&:keys).flatten.uniq
     rows.map { |hash_row| all_keys.each { |key| hash_row[key] ||= '' } }
   end
 

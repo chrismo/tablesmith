@@ -2,19 +2,19 @@ require 'spec_helper'
 
 include Tablesmith
 
-describe Batch do
+describe Table do
   it 'should subclass array' do
-    b = Batch.new
+    b = Table.new
     b.length.should == 0
     b << 1
     b << 'a'
     b[0].should == 1
     b[1].should == 'a'
-    b.class.should == Batch
+    b.class.should == Table
   end
 
   it 'should pass unmatched Array messages to all items' do
-    b = Batch.new
+    b = Table.new
     b.length.should == 0
     b << 1
     b << '2'
@@ -27,7 +27,7 @@ describe Batch do
 | (empty) |
 +---------+
     TEXT
-    [].to_batch.text_table.to_s.should == expected
+    [].to_table.text_table.to_s.should == expected
   end
 
   it 'should handle a simple two row Array' do
@@ -40,6 +40,6 @@ describe Batch do
 | d | e | f |
 +---+---+---+
     TABLE
-    actual.to_batch.text_table.to_s.should == expected
+    actual.to_table.text_table.to_s.should == expected
   end
 end

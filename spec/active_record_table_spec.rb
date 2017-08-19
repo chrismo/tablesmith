@@ -12,7 +12,7 @@ describe 'ActiveRecordSource' do
 |    | B          |           |     |                   |
 +----+------------+-----------+-----+-------------------+
     TABLE
-    [a, b].to_batch.text_table.to_s.should == expected
+    [a, b].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs ActiveRecord in column order' do
@@ -24,7 +24,7 @@ describe 'ActiveRecordSource' do
 | 1  | chris      | mo        | 43  |                   |
 +----+------------+-----------+-----+-------------------+
     TABLE
-    [p].to_batch.text_table.to_s.should == expected
+    [p].to_table.text_table.to_s.should == expected
   end
 
   it 'handles custom serialization options in batch' do
@@ -37,12 +37,42 @@ describe 'ActiveRecordSource' do
 | chrismo    | 43  | 1971      |
 +------------+-----+-----------+
     TABLE
-    b = [p].to_batch
+    b = [p].to_table
 
     def b.serializable_options
       {:only => [:first_name, :age], :methods => [:year_born]}
     end
 
+    b.text_table.to_s.should == expected
+  end
+
+  it 'auto reloads records' do
+    p = Person.create(:first_name => 'chrismo', :age => 43)
+
+    expected = <<-TABLE
++------------+-----+-----------+
+| first_name | age | year_born |
++------------+-----+-----------+
+| chrismo    | 43  | 1971      |
++------------+-----+-----------+
+    TABLE
+    b = [p].to_table
+
+    def b.serializable_options
+      {:only => [:first_name, :age], :methods => [:year_born]}
+    end
+    b.text_table.to_s.should == expected
+
+    # update the value through another instance.
+    Person.last.update_column(:age, 46)
+
+    expected = <<-TABLE
++------------+-----+-----------+
+| first_name | age | year_born |
++------------+-----+-----------+
+| chrismo    | 46  | 1968      |
++------------+-----+-----------+
+    TABLE
     b.text_table.to_s.should == expected
   end
 
@@ -55,7 +85,7 @@ describe 'ActiveRecordSource' do
 | chris | mo   | 43  |
 +-------+------+-----+
     TABLE
-    b = [p].to_batch
+    b = [p].to_table
 
     def b.serializable_options
       {:only => [:first, :last, :age]}
@@ -73,7 +103,7 @@ describe 'ActiveRecordSource' do
 | chris  | mo     | 43  |
 +--------+--------+-----+
     TABLE
-    b = [p].to_batch
+    b = [p].to_table
 
     def b.serializable_options
       {:only => [:f_name, :l_name, :age]}
@@ -91,7 +121,7 @@ describe 'ActiveRecordSource' do
 | chris         | mo       | 43  |
 +---------------+----------+-----+
     TABLE
-    b = [p].to_batch
+    b = [p].to_table
 
     def b.columns
       [Tablesmith::Column.new(name: :first_name, alias: :primer_nombre),
@@ -108,7 +138,7 @@ describe 'ActiveRecordSource' do
   it 'handles associations without aliases' do
     s = Supplier.create(name: 'supplier')
     s.account = Account.create(name: 'account', tax_identification_number: '123456')
-    b = [s].to_batch
+    b = [s].to_table
 
     def b.serializable_options
       {:only => [:name], :include => {:account => {:only => [:name, :tax_identification_number]}}}
@@ -130,7 +160,7 @@ describe 'ActiveRecordSource' do
   it 'handles associations with aliases' do
     s = Supplier.create(name: 'supplier')
     s.account = Account.create(name: 'account', tax_identification_number: '123456')
-    b = [s].to_batch
+    b = [s].to_table
 
     def b.serializable_options
       {:only => [:name], :include => {:account => {:only => [:name, :tax_id]}}}
@@ -158,7 +188,7 @@ describe 'ActiveRecordSource' do
   # may need/want to handle the hash resulting from an association differently from the hash resulting from a method/attr
   it 'supports field with hash contents' do
     p = Person.create(first_name: 'chrismo', custom_attributes: {skills: {instrument: 'piano', style: 'jazz'}})
-    b = [p].to_batch
+    b = [p].to_table
 
     a = format_ids([p.id])[0]
     expected = <<-TABLE
@@ -178,7 +208,7 @@ describe 'ActiveRecordSource' do
     p2 = Person.create(first_name: 'romer', custom_attributes: {instrument: 'kazoo'})
     p1 = Person.create(first_name: 'chrismo', custom_attributes: {instrument: 'piano', style: 'jazz'})
     p3 = Person.create(first_name: 'glv', custom_attributes: {})
-    batch = [p2, p1, p3].to_batch
+    batch = [p2, p1, p3].to_table
 
     a, b, c = format_ids([p2.id, p1.id, p3.id])
 
@@ -200,7 +230,7 @@ describe 'ActiveRecordSource' do
   it 'supports consistent ordering of dynamic columns' do
     p1 = Person.create(first_name: 'chrismo', custom_attributes: {instrument: 'piano', style: 'jazz'})
     p2 = Person.create(first_name: 'romer', custom_attributes: {hobby: 'games'})
-    batch = [p1, p2].to_batch
+    batch = [p1, p2].to_table
 
     a, b = format_ids([p1.id, p2.id])
 
@@ -220,7 +250,7 @@ describe 'ActiveRecordSource' do
 
   it 'handles AR instance without an association present' do
     s = Supplier.create(name: 'supplier')
-    b = [s].to_batch
+    b = [s].to_table
 
     def b.serializable_options
       {:only => [:name], :include => {:account => {:only => [:name, :tax_id]}}}
@@ -244,7 +274,7 @@ describe 'ActiveRecordSource' do
       ''
     end
 
-    b = [s2].to_batch
+    b = [s2].to_table
 
     # methods need Columns as well
     def b.serializable_options
@@ -268,7 +298,7 @@ describe 'ActiveRecordSource' do
     p = Parent.create(name: 'parent')
     c = Child.create(name: 'child', parent: p)
 
-    b = [p].to_batch
+    b = [p].to_table
 
     # little weird looking at this point, but at least not broken
     expected = <<-TABLE

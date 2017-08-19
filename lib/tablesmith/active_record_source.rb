@@ -2,14 +2,10 @@ module Tablesmith::ActiveRecordSource
   include Tablesmith::HashRowsBase
 
   def convert_item_to_hash_row(item)
-    # TODO: reload ActiveRecords automagically
-    if item.respond_to? :serializable_hash
-      hash = item.serializable_hash(process_all_columns(serializable_options))
-      hash = fold_un_sourced_attributes_into_source_hash(first.class.name.underscore.to_sym, hash)
-      flatten_inner_hashes(hash)
-    else
-      super
-    end
+    item.reload unless item.new_record?
+    hash = item.serializable_hash(process_all_columns(serializable_options))
+    hash = fold_un_sourced_attributes_into_source_hash(first.class.name.underscore.to_sym, hash)
+    flatten_inner_hashes(hash)
   end
 
   def column_order
@@ -21,25 +17,30 @@ module Tablesmith::ActiveRecordSource
     {}
   end
 
-  # TODO: memoize - otherwise it's recalculated on every row
   def process_all_columns(serializable_options)
-    @columns = []
-
-    process_columns(serializable_options, first.class)
-
-    include = serializable_options[:include]
-
-    # swiped from activemodel-3.2.17/lib/active_model/serialization.rb
-    unless include.is_a?(Hash)
-      include = Hash[Array.wrap(include).map { |n| n.is_a?(Hash) ? n.to_a.first : [n, {}] }]
-    end
-
-    include.each do |association, opts|
-      ar_class = first.class.reflections[association].klass
-      process_columns(opts, ar_class)
-    end
+    build_columns(serializable_options)
 
     serializable_options
+  end
+
+  def build_columns(serializable_options)
+    @columns || begin
+      @columns = []
+
+      process_columns(serializable_options, first.class)
+
+      include = serializable_options[:include]
+
+      # swiped from activemodel-3.2.17/lib/active_model/serialization.rb
+      unless include.is_a?(Hash)
+        include = Hash[Array.wrap(include).map { |n| n.is_a?(Hash) ? n.to_a.first : [n, {}] }]
+      end
+
+      include.each do |association, opts|
+        ar_class = first.class.reflections[association].klass
+        process_columns(opts, ar_class)
+      end
+    end
   end
 
   def process_columns(serializable_options, ar_class)
