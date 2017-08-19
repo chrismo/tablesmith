@@ -1,4 +1,5 @@
-TargetRubyVersion: 2.3
+AllCops:
+  TargetRubyVersion: 2.3
 
 Layout/IndentHeredoc:
   Enabled: true

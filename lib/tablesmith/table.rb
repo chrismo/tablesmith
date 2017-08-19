@@ -146,3 +146,9 @@ class Array
   end
 end
 
+class Hash
+  def to_table
+    b = Tablesmith::Table.new([self])
+    b.extend Tablesmith::HashRowsSource
+  end
+end
