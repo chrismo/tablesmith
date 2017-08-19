@@ -9,7 +9,7 @@ describe 'HashRowsSource' do
 | 1 | 2 |
 +---+---+
     TABLE
-    [{a: 1, b: 2}].to_batch.text_table.to_s.should == expected
+    [{a: 1, b: 2}].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs text table of mixed columns hash rows with default columns' do
@@ -24,7 +24,7 @@ describe 'HashRowsSource' do
     [
       {a: 1, b: 2},
       {a: 2, c: '!'}
-    ].to_batch.text_table.to_s.should == expected
+    ].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs text table of deep hash rows with defined columns' do
@@ -37,7 +37,7 @@ describe 'HashRowsSource' do
 | 1 | 2 | 2 |
 +---+---+---+
     TABLE
-    b = [{a: 1, b: {c: 2, d: 2}}].to_batch
+    b = [{a: 1, b: {c: 2, d: 2}}].to_table
     def b.columns
       [
         Column.new(name: :a),

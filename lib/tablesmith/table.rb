@@ -1,8 +1,7 @@
 require 'text-table'
 
 module Tablesmith
-  # TODO - rename Batch to Table?
-  class Batch < Array
+  class Table < Array
     def method_missing(meth_id, *args)
       count = 1
       self.map do |t|
@@ -63,7 +62,6 @@ module Tablesmith
       []
     end
 
-    # TODO: resolve with column_order
     def columns
       @columns
     end
@@ -127,8 +125,8 @@ module Tablesmith
 end
 
 class Array
-  def to_batch
-    b = Tablesmith::Batch.new(self)
+  def to_table
+    b = Tablesmith::Table.new(self)
 
     if defined?(ActiveRecord) && defined?(ActiveRecord::Base)
       if b.first && b.first.is_a?(ActiveRecord::Base)
