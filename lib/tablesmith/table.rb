@@ -128,6 +128,9 @@ class Array
   def to_table
     b = Tablesmith::Table.new(self)
 
+    # TODO: redesign such that every row is reacted to appropriately,
+    # so mixed content could be supported. Maybe every cell could be
+    # rendered appropriately, with nested tables.
     if defined?(ActiveRecord) && defined?(ActiveRecord::Base)
       if b.first && b.first.is_a?(ActiveRecord::Base)
         b.extend Tablesmith::ActiveRecordSource
