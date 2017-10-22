@@ -7,6 +7,7 @@ module Tablesmith::HashRowsBase
   end
 
   def sort_columns(rows)
+    return if column_order.empty?
     rows.map! do |row|
       # this sort gives preference to column_order then falls back to alphabetic for leftovers.
       # this is handy when columns auto-generate based on hash data.

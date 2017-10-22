@@ -52,9 +52,9 @@ describe 'HashRowsSource' do
   it 'outputs text table of deep hash rows with defined columns' do
     expected = <<~TABLE
       +---+---+---+
-      |   |   b   |
+      | a |   b   |
       +---+---+---+
-      | a | c | d |
+      |   | c | d |
       +---+---+---+
       | 1 | 2 | 2 |
       +---+---+---+
@@ -74,7 +74,19 @@ describe 'HashRowsSource' do
     pending
   end
 
-  it 'keeps OrderedHash keys in order' # I think it fails this test
+  it 'keeps OrderedHash keys in order' do
+    h = ActiveSupport::OrderedHash.new
+    h[:z] = 2
+    h[:y] = 1
+    expected = <<~TABLE
+      +---+---+
+      | z | y |
+      +---+---+
+      | 2 | 1 |
+      +---+---+
+    TABLE
+    h.to_table.text_table.to_s.should == expected
+  end
 
   it 'outputs text table of deep hash rows with default columns'
 end
