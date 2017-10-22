@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tablesmith (0.2.1)
+    tablesmith (0.2.2)
       text-table
 
 GEM
@@ -63,4 +63,4 @@ DEPENDENCIES
   tablesmith!
 
 BUNDLED WITH
-   1.15.4
+   1.16.0.pre.2
