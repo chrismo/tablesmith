@@ -8,7 +8,7 @@ module Tablesmith::ArrayRowsSource
     item
   end
 
-ª  # TODO: no support for deep
+  # TODO: no support for deep
   def build_columns
     @columns ||= []
     self.map do |array_row|

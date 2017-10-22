@@ -12,6 +12,28 @@ describe 'HashRowsSource' do
     [{a: 1, b: 2}].to_table.text_table.to_s.should == expected
   end
 
+  it 'outputs text table of hash row with nested Array' do
+    expected = <<~TABLE
+      +---+--------+
+      | a |   b    |
+      +---+--------+
+      | 1 | [1, 2] |
+      +---+--------+
+    TABLE
+    [{a: 1, b: [1, 2]}].to_table.text_table.to_s.should == expected
+  end
+
+  it 'outputs text table of hash row with nested Hash' do
+    expected = <<~TABLE
+      +---+---------+
+      | a |    b    |
+      +---+---------+
+      | 1 | {:c=>3} |
+      +---+---------+
+    TABLE
+    [{a: 1, b: {c: 3}}].to_table.text_table.to_s.should == expected
+  end
+
   it 'outputs text table of mixed columns hash rows with default columns' do
     expected = <<~TABLE
       +---+---+---+
@@ -46,10 +68,13 @@ describe 'HashRowsSource' do
         ]}
       ]
     end
-    # this would be nice. Payments has some code along these lines for BraintreeBatch? or some ActiveRecordSource re-use?
+
+    # this would be nice.
     # b.text_table.to_s.should == expected
     pending
   end
+
+  it 'keeps OrderedHash keys in order' # I think it fails this test
 
   it 'outputs text table of deep hash rows with default columns'
 end

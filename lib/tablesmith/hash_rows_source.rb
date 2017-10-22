@@ -30,7 +30,7 @@ module Tablesmith::HashRowsSource
   def value_from_hash(row, deep_hash, col_or_hash)
     case col_or_hash
     when Tablesmith::Column
-      row[col_or_hash.display_name] = deep_hash[col_or_hash.name]
+      row[col_or_hash.display_name] = deep_hash[col_or_hash.name].to_s
     when Hash
       col_or_hash.each_pair do |sub_hash_key, cols_or_hash|
         [cols_or_hash].flatten.each do |inner_col_or_hash|
