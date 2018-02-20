@@ -1,4 +1,5 @@
 require 'text-table'
+require 'csv'
 
 module Tablesmith
   class Table < Array
@@ -37,6 +38,22 @@ module Tablesmith
 
       rows = create_headers(rows) + (rows.map { |row| row_values(row) })
       rows.to_text_table
+    end
+
+    def to_csv
+      CSV.generate do |csv|
+        text_table.rows.each do |row|
+          next if row == :separator
+          csv << row.map do |cell|
+            case cell
+              when Hash
+                cell[:value]
+              else
+                cell
+            end
+          end
+        end
+      end
     end
 
     # override in subclass or mixin

@@ -42,4 +42,14 @@ describe Table do
     TABLE
     actual.to_table.text_table.to_s.should == expected
   end
+
+  it 'should output csv' do
+    a = [['a', 'b,s', 'c'], %w(d e f)]
+    actual = a
+    expected = <<~TABLE
+      a,"b,s",c
+      d,e,f
+    TABLE
+    actual.to_table.to_csv.should == expected
+  end
 end
