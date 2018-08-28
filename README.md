@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/livingsocial/tablesmith.svg?branch=master)](https://travis-ci.org/livingsocial/tablesmith)
+
 # Tablesmith
 
 Drop-in gem for console tables for Hash, Array and ActiveRecord.
