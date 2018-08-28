@@ -54,7 +54,7 @@ describe Table do
   end
 
   it 'should output html' do
-    actual = [%w[a b c], %w[d e f]]
+    actual = [%w[a b c], %w[d e f], %w[g h i]]
     expected = <<~TABLE
       <table>
           <thead>
@@ -69,6 +69,11 @@ describe Table do
               <td>d</td>
               <td>e</td>
               <td>f</td>
+          </tr>
+          <tr>
+              <td>g</td>
+              <td>h</td>
+              <td>i</td>
           </tr>
           </tbody>
       </table>

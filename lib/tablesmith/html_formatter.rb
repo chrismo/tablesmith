@@ -21,34 +21,31 @@ class HtmlFormatter
 
   def append_table_head
     @lines << "#{indent}<thead>"
-    @lines << "#{indent}<tr>"
     unless @table.empty?
       rows = @table.text_table.rows[0..0]
       append_rows(rows, 'th')
     end
-    @lines << "#{indent}</tr>"
     @lines << "#{indent}</thead>"
   end
 
   def append_table_body
     @lines << "#{indent}<tbody>"
-    @lines << "#{indent}<tr>"
-
     unless @table.empty?
       rows = @table.text_table.rows[2..-1]
       append_rows(rows, 'td')
     end
-    @lines << "#{indent}</tr>"
     @lines << "#{indent}</tbody>"
   end
 
   def append_rows(rows, tag)
     rows.each do |row|
       next if row == :separator
+      @lines << "#{indent}<tr>"
       row.map do |cell|
         value = cell_value(cell)
         @lines << "#{indent}#{indent}<#{tag}>#{value}</#{tag}>"
       end
+      @lines << "#{indent}</tr>"
     end
   end
 
