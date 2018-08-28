@@ -12,6 +12,10 @@ module Tablesmith
       end
     end
 
+    def respond_to_missing?
+      super
+    end
+
     # irb
     def inspect
       pretty_inspect
@@ -54,6 +58,10 @@ module Tablesmith
           end
         end
       end
+    end
+
+    def to_html
+      HtmlFormatter.new(self).to_html
     end
 
     # override in subclass or mixin
