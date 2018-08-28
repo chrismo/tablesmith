@@ -52,4 +52,27 @@ describe Table do
     TABLE
     actual.to_table.to_csv.should == expected
   end
+
+  it 'should output html' do
+    actual = [%w[a b c], %w[d e f]]
+    expected = <<~TABLE
+      <table>
+          <thead>
+          <tr>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+              <td>d</td>
+              <td>e</td>
+              <td>f</td>
+          </tr>
+          </tbody>
+      </table>
+    TABLE
+    actual.to_table.to_html.should == expected
+  end
 end

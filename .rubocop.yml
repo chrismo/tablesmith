@@ -1,5 +1,11 @@
+require:
+- rubocop_lineup
+
 AllCops:
   TargetRubyVersion: 2.3
 
 Layout/IndentHeredoc:
   Enabled: true
+
+Style/Documentation:
+  Enabled: false
