@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'text-table'
 require 'csv'
 
@@ -5,8 +7,8 @@ module Tablesmith
   class Table < Array
     def method_missing(meth_id, *args)
       count = 1
-      self.map do |t|
-        $stderr.print '.' if count.divmod(100)[1] == 0
+      map do |t|
+        $stderr.print '.' if (count.divmod(100)[1]).zero?
         count += 1
         t.send(meth_id, *args)
       end
@@ -32,9 +34,9 @@ module Tablesmith
     end
 
     def text_table
-      return ['(empty)'].to_text_table if self.empty?
+      return ['(empty)'].to_text_table if empty?
 
-      rows = self.map { |item| convert_item_to_hash_row(item) }.compact
+      rows = map { |item| convert_item_to_hash_row(item) }.compact
 
       normalize_keys(rows)
 
@@ -48,12 +50,13 @@ module Tablesmith
       CSV.generate do |csv|
         text_table.rows.each do |row|
           next if row == :separator
+
           csv << row.map do |cell|
             case cell
-              when Hash
-                cell[:value]
-              else
-                cell
+            when Hash
+              cell[:value]
+            else
+              cell
             end
           end
         end
@@ -70,8 +73,7 @@ module Tablesmith
     end
 
     # override in subclass or mixin
-    def sort_columns(rows)
-    end
+    def sort_columns(rows); end
 
     # override in subclass or mixin
     def convert_item_to_hash_row(item)
@@ -79,17 +81,14 @@ module Tablesmith
     end
 
     # override in subclass or mixin
-    def normalize_keys(rows)
-    end
+    def normalize_keys(rows); end
 
     # override in subclass or mixin
     def column_order
       []
     end
 
-    def columns
-      @columns
-    end
+    attr_reader :columns
 
     def create_headers(rows)
       top_row = rows.first
@@ -111,7 +110,7 @@ module Tablesmith
         row = []
         # this relies on Ruby versions where hash retains add order
         groups.each_pair do |name, span|
-          row << {value: name, align: :center, colspan: span}
+          row << { value: name, align: :center, colspan: span }
         end
         [row, :separator]
       end
@@ -121,7 +120,7 @@ module Tablesmith
       column_names.map do |name|
         instance = columns.detect { |ca| ca.name.to_s == name.to_s }
         value = instance ? instance.display_name : name
-        {:value => value, :align => :center}
+        { value: value, align: :center }
       end
     end
   end
@@ -129,14 +128,14 @@ module Tablesmith
   class Column
     attr_accessor :source, :name, :alias
 
-    def initialize(attributes={})
+    def initialize(attributes = {})
       @source = attributes.delete(:source)
       @name = attributes.delete(:name)
       @alias = attributes.delete(:alias)
     end
 
     def display_name
-      "#{@alias || @name}"
+      (@alias || @name).to_s
     end
 
     def full_unaliased_name
@@ -157,18 +156,12 @@ class Array
     # so mixed content could be supported. Maybe every cell could be
     # rendered appropriately, with nested tables.
     if defined?(ActiveRecord) && defined?(ActiveRecord::Base)
-      if b.first && b.first.is_a?(ActiveRecord::Base)
-        b.extend Tablesmith::ActiveRecordSource
-      end
+      b.extend Tablesmith::ActiveRecordSource if b.first&.is_a?(ActiveRecord::Base)
     end
 
-    if b.first && b.first.is_a?(Hash)
-      b.extend Tablesmith::HashRowsSource
-    end
+    b.extend Tablesmith::HashRowsSource if b.first&.is_a?(Hash)
 
-    if b.first && b.first.is_a?(Array)
-      b.extend Tablesmith::ArrayRowsSource
-    end
+    b.extend Tablesmith::ArrayRowsSource if b.first&.is_a?(Array)
 
     b
   end

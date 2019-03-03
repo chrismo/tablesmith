@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ActiveRecord and HashRowsSource share a lot, but not everything.
 module Tablesmith::HashRowsBase
   # not all resulting rows will have data in all columns, so make sure all rows pad out missing columns
@@ -8,6 +10,7 @@ module Tablesmith::HashRowsBase
 
   def sort_columns(rows)
     return if column_order.empty?
+
     rows.map! do |row|
       # this sort gives preference to column_order then falls back to alphabetic for leftovers.
       # this is handy when columns auto-generate based on hash data.

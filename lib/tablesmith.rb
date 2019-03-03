@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tablesmith/table'
 require 'tablesmith/array_rows_source'
 require 'tablesmith/hash_rows_base'

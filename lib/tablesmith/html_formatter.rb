@@ -40,6 +40,7 @@ class HtmlFormatter
   def append_rows(rows, tag)
     rows.each do |row|
       next if row == :separator
+
       @lines << "#{indent}<tr>"
       row.map do |cell|
         value = cell_value(cell)

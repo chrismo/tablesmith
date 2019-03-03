@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'ActiveRecordSource' do
@@ -16,7 +18,7 @@ describe 'ActiveRecordSource' do
   end
 
   it 'outputs ActiveRecord in column order' do
-    p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
+    p = Person.create(first_name: 'chris', last_name: 'mo', age: 43)
     expected = <<~TABLE
       +----+------------+-----------+-----+-------------------+
       | id | first_name | last_name | age | custom_attributes |
@@ -28,7 +30,7 @@ describe 'ActiveRecordSource' do
   end
 
   it 'handles custom serialization options in batch' do
-    p = Person.create(:first_name => 'chrismo', :age => 43)
+    p = Person.create(first_name: 'chrismo', age: 43)
 
     expected = <<~TABLE
       +------------+-----+-----------+
@@ -40,14 +42,14 @@ describe 'ActiveRecordSource' do
     b = [p].to_table
 
     def b.serializable_options
-      {:only => [:first_name, :age], :methods => [:year_born]}
+      { only: %i[first_name age], methods: [:year_born] }
     end
 
     b.text_table.to_s.should == expected
   end
 
   it 'auto reloads records' do
-    p = Person.create(:first_name => 'chrismo', :age => 43)
+    p = Person.create(first_name: 'chrismo', age: 43)
 
     expected = <<~TABLE
       +------------+-----+-----------+
@@ -59,7 +61,7 @@ describe 'ActiveRecordSource' do
     b = [p].to_table
 
     def b.serializable_options
-      {:only => [:first_name, :age], :methods => [:year_born]}
+      { only: %i[first_name age], methods: [:year_born] }
     end
     b.text_table.to_s.should == expected
 
@@ -77,7 +79,7 @@ describe 'ActiveRecordSource' do
   end
 
   it 'handles column name partials' do
-    p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
+    p = Person.create(first_name: 'chris', last_name: 'mo', age: 43)
     expected = <<~TABLE
       +-------+------+-----+
       | first | last | age |
@@ -88,14 +90,14 @@ describe 'ActiveRecordSource' do
     b = [p].to_table
 
     def b.serializable_options
-      {:only => [:first, :last, :age]}
+      { only: %i[first last age] }
     end
 
     b.text_table.to_s.should == expected
   end
 
   it 'handles column name partials across words' do
-    p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
+    p = Person.create(first_name: 'chris', last_name: 'mo', age: 43)
     expected = <<~TABLE
       +--------+--------+-----+
       | f_name | l_name | age |
@@ -106,14 +108,14 @@ describe 'ActiveRecordSource' do
     b = [p].to_table
 
     def b.serializable_options
-      {:only => [:f_name, :l_name, :age]}
+      { only: %i[f_name l_name age] }
     end
 
     b.text_table.to_s.should == expected
   end
 
   it 'handles explicit column aliases' do
-    p = Person.create(:first_name => 'chris', :last_name => 'mo', :age => 43)
+    p = Person.create(first_name: 'chris', last_name: 'mo', age: 43)
     expected = <<~TABLE
       +---------------+----------+-----+
       | primer_nombre | apellido | age |
@@ -129,7 +131,7 @@ describe 'ActiveRecordSource' do
     end
 
     def b.serializable_options
-      {:only => [:first_name, :last_name, :age]}
+      { only: %i[first_name last_name age] }
     end
 
     b.text_table.to_s.should == expected
@@ -141,7 +143,7 @@ describe 'ActiveRecordSource' do
     b = [s].to_table
 
     def b.serializable_options
-      {:only => [:name], :include => {:account => {:only => [:name, :tax_identification_number]}}}
+      { only: [:name], include: { account: { only: %i[name tax_identification_number] } } }
     end
 
     expected = <<~TABLE
@@ -163,7 +165,7 @@ describe 'ActiveRecordSource' do
     b = [s].to_table
 
     def b.serializable_options
-      {:only => [:name], :include => {:account => {:only => [:name, :tax_id]}}}
+      { only: [:name], include: { account: { only: %i[name tax_id] } } }
     end
 
     expected = <<~TABLE
@@ -187,7 +189,7 @@ describe 'ActiveRecordSource' do
 
   # may need/want to handle the hash resulting from an association differently from the hash resulting from a method/attr
   it 'supports field with hash contents' do
-    p = Person.create(first_name: 'chrismo', custom_attributes: {skills: {instrument: 'piano', style: 'jazz'}})
+    p = Person.create(first_name: 'chrismo', custom_attributes: { skills: { instrument: 'piano', style: 'jazz' } })
     b = [p].to_table
 
     a = format_ids([p.id])[0]
@@ -205,8 +207,8 @@ describe 'ActiveRecordSource' do
   end
 
   it 'supports multiple rows with different column counts' do
-    p2 = Person.create(first_name: 'romer', custom_attributes: {instrument: 'kazoo'})
-    p1 = Person.create(first_name: 'chrismo', custom_attributes: {instrument: 'piano', style: 'jazz'})
+    p2 = Person.create(first_name: 'romer', custom_attributes: { instrument: 'kazoo' })
+    p1 = Person.create(first_name: 'chrismo', custom_attributes: { instrument: 'piano', style: 'jazz' })
     p3 = Person.create(first_name: 'glv', custom_attributes: {})
     batch = [p2, p1, p3].to_table
 
@@ -228,8 +230,8 @@ describe 'ActiveRecordSource' do
   end
 
   it 'supports consistent ordering of dynamic columns' do
-    p1 = Person.create(first_name: 'chrismo', custom_attributes: {instrument: 'piano', style: 'jazz'})
-    p2 = Person.create(first_name: 'romer', custom_attributes: {hobby: 'games'})
+    p1 = Person.create(first_name: 'chrismo', custom_attributes: { instrument: 'piano', style: 'jazz' })
+    p2 = Person.create(first_name: 'romer', custom_attributes: { hobby: 'games' })
     batch = [p1, p2].to_table
 
     a, b = format_ids([p1.id, p2.id])
@@ -253,7 +255,7 @@ describe 'ActiveRecordSource' do
     b = [s].to_table
 
     def b.serializable_options
-      {:only => [:name], :include => {:account => {:only => [:name, :tax_id]}}}
+      { only: [:name], include: { account: { only: %i[name tax_id] } } }
     end
 
     expected = <<~TABLE
@@ -268,7 +270,7 @@ describe 'ActiveRecordSource' do
   end
 
   it 'properly groups when original columns not sequential' do
-    s2 = Supplier.create(name: 'sup. two', custom_attributes: {a: 1})
+    s2 = Supplier.create(name: 'sup. two', custom_attributes: { a: 1 })
 
     def s2.foo
       ''
@@ -278,7 +280,7 @@ describe 'ActiveRecordSource' do
 
     # methods need Columns as well
     def b.serializable_options
-      {:only => [:name, :custom_attributes], :methods => [:foo]}
+      { only: %i[name custom_attributes], methods: [:foo] }
     end
 
     expected = <<~TABLE
@@ -296,7 +298,7 @@ describe 'ActiveRecordSource' do
 
   it 'supports one to many association' do
     p = Parent.create(name: 'parent')
-    c = Child.create(name: 'child', parent: p)
+    Child.create(name: 'child', parent: p)
 
     b = [p].to_table
 
@@ -310,32 +312,32 @@ describe 'ActiveRecordSource' do
     TABLE
 
     def b.serializable_options
-      {:include => {:children => {:only => [:name]}}}
+      { include: { children: { only: [:name] } } }
     end
 
     b.text_table.to_s.should == expected
   end
 
   def format_ids(ary)
-    ary.map {|value| " #{value.to_s.ljust(3)}" }
+    ary.map { |value| " #{value.to_s.ljust(3)}" }
   end
 
   describe 'fold un-sourced attributes into source hash' do
     let(:obj) { Object.new.extend Tablesmith::ActiveRecordSource }
 
     it 'should handle simple hash' do
-      obj.fold_un_sourced_attributes_into_source_hash(:foo, {a: 1, b: 2}).should == {foo: {a: 1, b: 2}}
+      obj.fold_un_sourced_attributes_into_source_hash(:foo, a: 1, b: 2).should == { foo: { a: 1, b: 2 } }
     end
 
     it 'should handle nested hashes' do
-      before = {'name' => 'chris', account: {'name' => 'account_name'}}
-      expected = {foo: {'name' => 'chris'}, account: {'name' => 'account_name'}}
+      before = { 'name' => 'chris', account: { 'name' => 'account_name' } }
+      expected = { foo: { 'name' => 'chris' }, account: { 'name' => 'account_name' } }
       obj.fold_un_sourced_attributes_into_source_hash(:foo, before).should == expected
     end
 
     it 'should handle deep nested hashes' do
-      before = {'name' => 'chris', account: {'id' => {'name' => 'account_name', 'number' => 123456}}}
-      expected = {foo: {'name' => 'chris'}, account: {'id' => {'name' => 'account_name', 'number' => 123456}}}
+      before = { 'name' => 'chris', account: { 'id' => { 'name' => 'account_name', 'number' => 123_456 } } }
+      expected = { foo: { 'name' => 'chris' }, account: { 'id' => { 'name' => 'account_name', 'number' => 123_456 } } }
       obj.fold_un_sourced_attributes_into_source_hash(:foo, before).should == expected
     end
   end
@@ -344,15 +346,15 @@ describe 'ActiveRecordSource' do
     let(:obj) { Object.new.extend Tablesmith::ActiveRecordSource }
 
     it 'should flatten inner hash' do
-      before = {foo: {'name' => 'chris'}, account: {'name' => 'account_name'}}
-      expected = {'foo.name' => 'chris', 'account.name' => 'account_name'}
+      before = { foo: { 'name' => 'chris' }, account: { 'name' => 'account_name' } }
+      expected = { 'foo.name' => 'chris', 'account.name' => 'account_name' }
 
       obj.flatten_inner_hashes(before).should == expected
     end
 
     it 'should to_s deep nested hashes' do
-      before = {foo: {'name' => 'chris'}, account: {'id' => {'name' => 'account_name', 'number' => 123456}}}
-      expected = {'foo.name' => 'chris', "account.id" => "{\"name\"=>\"account_name\", \"number\"=>123456}"}
+      before = { foo: { 'name' => 'chris' }, account: { 'id' => { 'name' => 'account_name', 'number' => 123_456 } } }
+      expected = { 'foo.name' => 'chris', 'account.id' => '{"name"=>"account_name", "number"=>123456}' }
 
       obj.flatten_inner_hashes(before).should == expected
     end
