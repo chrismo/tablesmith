@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-include Tablesmith
+include Tablesmith # rubocop:disable Style/MixinUsage:
 
 describe Table do
   it 'should subclass array' do
@@ -31,7 +33,7 @@ describe Table do
   end
 
   it 'should handle a simple two row Array' do
-    a = [%w(a b c), %w(d e f)]
+    a = [%w[a b c], %w[d e f]]
     actual = a
     expected = <<~TABLE
       +---+---+---+
@@ -44,7 +46,7 @@ describe Table do
   end
 
   it 'should output csv' do
-    a = [['a', 'b,s', 'c'], %w(d e f)]
+    a = [['a', 'b,s', 'c'], %w[d e f]]
     actual = a
     expected = <<~TABLE
       a,"b,s",c

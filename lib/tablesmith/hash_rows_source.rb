@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tablesmith::HashRowsSource
   include Tablesmith::HashRowsBase
 
@@ -21,9 +23,9 @@ module Tablesmith::HashRowsSource
   # TODO: no support for deep
   def build_columns
     @columns ||= []
-    self.map do |hash_row|
+    map do |hash_row|
       @columns << hash_row.keys.map { |k| Tablesmith::Column.new(name: k) }
-    end 
+    end
     @columns.flatten!
   end
 
@@ -37,11 +39,9 @@ module Tablesmith::HashRowsSource
           value_from_hash(row, deep_hash[sub_hash_key], inner_col_or_hash)
         end
       end
-    else
-      nil
     end
-  rescue => e
-    $stderr.puts "#{e.message}: #{col_or_hash}" if @debug
+  rescue StandardError => e
+    warn "#{e.message}: #{col_or_hash}" if @debug
   end
 
   def hash_rows_to_text_table(hash_rows)
@@ -60,6 +60,6 @@ module Tablesmith::HashRowsSource
     end
 
     # Array addition from text-table
-    table.to_table(:first_row_is_head => true)
+    table.to_table(first_row_is_head: true)
   end
 end

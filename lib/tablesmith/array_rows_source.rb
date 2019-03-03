@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tablesmith::ArrayRowsSource
   def text_table
     build_columns if columns.nil?
@@ -11,7 +13,7 @@ module Tablesmith::ArrayRowsSource
   # TODO: no support for deep
   def build_columns
     @columns ||= []
-    self.map do |array_row|
+    map do |array_row|
       @columns << array_row.map { |item| Tablesmith::Column.new(name: item) }
     end
     @columns.flatten!

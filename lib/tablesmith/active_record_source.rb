@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tablesmith::ActiveRecordSource
   include Tablesmith::HashRowsBase
 
@@ -73,7 +75,7 @@ module Tablesmith::ActiveRecordSource
   def flatten_inner_hashes(hash)
     new_hash = {}
     stack = hash.each_pair.to_a
-    while ary = stack.shift
+    while (ary = stack.shift)
       key, value = ary
       if value.is_a?(Hash)
         value.each_pair do |assoc_key, assoc_value|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'Hash Source' do
@@ -9,6 +11,6 @@ describe 'Hash Source' do
       | 1 | 2 | 3 |
       +---+---+---+
     TABLE
-    {a: 1, b: 2, c: 3}.to_table.text_table.to_s.should == expected
+    { a: 1, b: 2, c: 3 }.to_table.text_table.to_s.should == expected
   end
 end

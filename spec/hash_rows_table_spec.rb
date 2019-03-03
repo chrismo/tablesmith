@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'HashRowsSource' do
@@ -9,7 +11,7 @@ describe 'HashRowsSource' do
       | 1 | 2 |
       +---+---+
     TABLE
-    [{a: 1, b: 2}].to_table.text_table.to_s.should == expected
+    [{ a: 1, b: 2 }].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs text table of hash row with nested Array' do
@@ -20,7 +22,7 @@ describe 'HashRowsSource' do
       | 1 | [1, 2] |
       +---+--------+
     TABLE
-    [{a: 1, b: [1, 2]}].to_table.text_table.to_s.should == expected
+    [{ a: 1, b: [1, 2] }].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs text table of hash row with nested Hash' do
@@ -31,7 +33,7 @@ describe 'HashRowsSource' do
       | 1 | {:c=>3} |
       +---+---------+
     TABLE
-    [{a: 1, b: {c: 3}}].to_table.text_table.to_s.should == expected
+    [{ a: 1, b: { c: 3 } }].to_table.text_table.to_s.should == expected
   end
 
   it 'outputs text table of mixed columns hash rows with default columns' do
@@ -44,8 +46,8 @@ describe 'HashRowsSource' do
       +---+---+---+
     TABLE
     [
-      {a: 1, b: 2},
-      {a: 2, c: '!'}
+      { a: 1, b: 2 },
+      { a: 2, c: '!' }
     ].to_table.text_table.to_s.should == expected
   end
 
@@ -59,13 +61,13 @@ describe 'HashRowsSource' do
       | 1 | 2 | 2 |
       +---+---+---+
     TABLE
-    b = [{a: 1, b: {c: 2, d: 2}}].to_table
+    b = [{ a: 1, b: { c: 2, d: 2 } }].to_table
     def b.columns
       [
         Column.new(name: :a),
-        {b: [
+        { b: [
           Column.new(name: :c)
-        ]}
+        ] }
       ]
     end
 
