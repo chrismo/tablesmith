@@ -35,3 +35,4 @@ but don't seem to specialize in what I want:
   - text-table
   - table_print
   - awesome_print
+  - [tabulo](https://github.com/matt-harvey/tabulo)
