@@ -39,7 +39,7 @@ module Tablesmith::ActiveRecordSource
       end
 
       include.each do |association, opts|
-        ar_class = first.class.reflections[association].klass
+        ar_class = first.class.reflections[association.to_s].klass
         process_columns(opts, ar_class)
       end
     end

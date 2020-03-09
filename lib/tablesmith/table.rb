@@ -95,9 +95,14 @@ module Tablesmith
     attr_reader :columns
 
     def create_headers(rows)
-      top_row = rows.first
-      column_names = top_row.first.is_a?(Array) ? top_row.map(&:first) : top_row
-      grouped_headers(column_names) + [apply_column_aliases(column_names), :separator]
+      first_element = rows.first
+      if first_element.is_a?(Array)
+        top_row = first_element
+        column_names = top_row.first.is_a?(Array) ? top_row.map(&:first) : top_row
+        grouped_headers(column_names) + [apply_column_aliases(column_names), :separator]
+      else
+        []
+      end
     end
 
     def grouped_headers(column_names)

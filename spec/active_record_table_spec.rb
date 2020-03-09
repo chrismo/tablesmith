@@ -14,7 +14,7 @@ describe 'ActiveRecordSource' do
       |    | B          |           |     |                   |
       +----+------------+-----------+-----+-------------------+
     TABLE
-    [a, b].to_table.text_table.to_s.should == expected
+    [a, b].to_table.to_s.should == expected
   end
 
   it 'outputs ActiveRecord in column order' do
@@ -26,7 +26,7 @@ describe 'ActiveRecordSource' do
       | 1  | chris      | mo        | 43  |                   |
       +----+------------+-----------+-----+-------------------+
     TABLE
-    [p].to_table.text_table.to_s.should == expected
+    [p].to_table.to_s.should == expected
   end
 
   it 'handles custom serialization options in batch' do
@@ -45,7 +45,7 @@ describe 'ActiveRecordSource' do
       { only: %i[first_name age], methods: [:year_born] }
     end
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'auto reloads records' do
@@ -63,7 +63,7 @@ describe 'ActiveRecordSource' do
     def b.serializable_options
       { only: %i[first_name age], methods: [:year_born] }
     end
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
 
     # update the value through another instance.
     Person.last.update_column(:age, 46)
@@ -75,7 +75,7 @@ describe 'ActiveRecordSource' do
       | chrismo    | 46  | 1968      |
       +------------+-----+-----------+
     TABLE
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'handles column name partials' do
@@ -93,7 +93,7 @@ describe 'ActiveRecordSource' do
       { only: %i[first last age] }
     end
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'handles column name partials across words' do
@@ -111,7 +111,7 @@ describe 'ActiveRecordSource' do
       { only: %i[f_name l_name age] }
     end
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'handles explicit column aliases' do
@@ -134,7 +134,7 @@ describe 'ActiveRecordSource' do
       { only: %i[first_name last_name age] }
     end
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'handles associations without aliases' do
@@ -156,7 +156,7 @@ describe 'ActiveRecordSource' do
       +----------+---------+---------------------------+
     TABLE
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'handles associations with aliases' do
@@ -178,7 +178,7 @@ describe 'ActiveRecordSource' do
       +----------+---------+--------+
     TABLE
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'retains serializable_options ordering'
@@ -203,7 +203,7 @@ describe 'ActiveRecordSource' do
       +----+------------+-----------+-----+----------------------------------------+
     TABLE
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'supports multiple rows with different column counts' do
@@ -226,7 +226,7 @@ describe 'ActiveRecordSource' do
       +----+------------+-----------+-----+------------+-----------+
     TABLE
 
-    batch.text_table.to_s.should == expected
+    batch.to_s.should == expected
   end
 
   it 'supports consistent ordering of dynamic columns' do
@@ -247,7 +247,7 @@ describe 'ActiveRecordSource' do
       +----+------------+-----------+-----+--------+------------+--------+
     TABLE
 
-    batch.text_table.to_s.should == expected
+    batch.to_s.should == expected
   end
 
   it 'handles AR instance without an association present' do
@@ -266,7 +266,7 @@ describe 'ActiveRecordSource' do
       +----------+
     TABLE
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'properly groups when original columns not sequential' do
@@ -293,7 +293,7 @@ describe 'ActiveRecordSource' do
       +----------+------+-------------------+
     TABLE
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   it 'supports one to many association' do
@@ -315,7 +315,7 @@ describe 'ActiveRecordSource' do
       { include: { children: { only: [:name] } } }
     end
 
-    b.text_table.to_s.should == expected
+    b.to_s.should == expected
   end
 
   def format_ids(ary)

@@ -20,12 +20,12 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'text-table'
 
-  gem.add_development_dependency 'activerecord', '~> 3.0'
+  gem.add_development_dependency 'activerecord', '~> 4.0'
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'rake', '>= 12.3.3'
   gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'rubocop'
   gem.add_development_dependency 'rubocop_lineup'
   gem.add_development_dependency 'simplecov'
-  gem.add_development_dependency 'sqlite3', '~> 1.3.5'
+  gem.add_development_dependency 'sqlite3', '~> 1.3.6'
 end
