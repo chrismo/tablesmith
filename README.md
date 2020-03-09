@@ -129,8 +129,8 @@ Here's a quick list of other gems that I've tried out that are awesome and do
 much more than what Tablesmith does, but don't seem to specialize in what I
 want:
 
-  - Hirb
-  - text-table
-  - table_print
-  - awesome_print
+  - [text-table](https://github.com/aptinio/text-table) _Tablesmith uses text-table underneath_
+  - [Hirb](https://github.com/cldwalker/hirb) _Hirb is cool, and pretty close to what I want_
+  - [table_print](http://tableprintgem.com/)
+  - [awesome_print](https://github.com/awesome-print/awesome_print)
   - [tabulo](https://github.com/matt-harvey/tabulo)
