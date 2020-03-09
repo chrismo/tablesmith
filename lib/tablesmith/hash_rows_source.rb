@@ -13,7 +13,7 @@ module Tablesmith::HashRowsSource
   end
 
   def flatten_hash_to_row(deep_hash, columns)
-    row = ActiveSupport::OrderedHash.new
+    row = {}
     columns.each do |col_or_hash|
       value_from_hash(row, deep_hash, col_or_hash)
     end

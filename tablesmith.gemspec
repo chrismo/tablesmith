@@ -22,8 +22,8 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'activerecord', '~> 3.0'
   gem.add_development_dependency 'pry'
-  gem.add_development_dependency 'rake', '~> 10.0'
-  gem.add_development_dependency 'rspec', '~> 2.0'
+  gem.add_development_dependency 'rake', '>= 12.3.3'
+  gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'rubocop'
   gem.add_development_dependency 'rubocop_lineup'
   gem.add_development_dependency 'simplecov'

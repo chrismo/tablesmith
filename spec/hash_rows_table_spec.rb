@@ -52,6 +52,8 @@ describe 'HashRowsSource' do
   end
 
   it 'outputs text table of deep hash rows with defined columns' do
+    pending
+
     expected = <<~TABLE
       +---+---+---+
       | a |   b   |
@@ -72,8 +74,7 @@ describe 'HashRowsSource' do
     end
 
     # this would be nice.
-    # b.text_table.to_s.should == expected
-    pending
+    b.text_table.to_s.should == expected
   end
 
   it 'keeps OrderedHash keys in order' do

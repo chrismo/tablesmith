@@ -18,6 +18,10 @@ module Tablesmith
       super
     end
 
+    def to_s
+      text_table.to_s
+    end
+
     # irb
     def inspect
       pretty_inspect
