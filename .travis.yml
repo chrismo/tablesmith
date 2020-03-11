@@ -1,10 +1,22 @@
 language: ruby
 
 rvm:
-  - 2.3.8
   - 2.4.6
   - 2.5.5
   - 2.6.5
   - 2.7.0
 
-before_install: gem install bundler -v 1.17.3
+gemfile:
+  - gemfiles/activerecord_4.gemfile
+  - gemfiles/activerecord_5.1.gemfile
+  - gemfiles/activerecord_5.2.gemfile
+  - gemfiles/activerecord_6.0.gemfile
+
+before_install: gem install bundler -v 2.1.2
+
+jobs:
+  exclude:
+    - rvm: 2.4.6
+      gemfile: gemfiles/activerecord_6.0.gemfile
+    - rvm: 2.7.0
+      gemfile: gemfiles/activerecord_4.gemfile

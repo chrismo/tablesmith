@@ -21,6 +21,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'text-table'
 
   gem.add_development_dependency 'activerecord', '~> 4.0'
+  gem.add_development_dependency 'appraisal'
+  gem.add_development_dependency 'bundler', '~> 2.1'
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'rake', '>= 12.3.3'
   gem.add_development_dependency 'rspec', '~> 3.0'
