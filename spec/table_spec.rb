@@ -5,7 +5,7 @@ require 'spec_helper'
 include Tablesmith # rubocop:disable Style/MixinUsage:
 
 describe Table do
-  it 'should subclass array' do
+  it 'should delegate to the internal array' do
     b = Table.new
     b.length.should == 0
     b << 1
@@ -29,7 +29,7 @@ describe Table do
       | (empty) |
       +---------+
     TEXT
-    [].to_table.text_table.to_s.should == expected
+    [].to_table.to_s.should == expected
   end
 
   it 'should handle a simple two row Array' do
@@ -42,7 +42,7 @@ describe Table do
       | d | e | f |
       +---+---+---+
     TABLE
-    actual.to_table.text_table.to_s.should == expected
+    actual.to_table.to_s.should == expected
   end
 
   it 'should output csv' do

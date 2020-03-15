@@ -42,11 +42,6 @@ describe 'Array Source' do
   end
 
   it 'just works with puts' do
-    pending
-
-    # Kernel.puts has special behavior for puts with Array,
-    # which Table subclasses, so this isn't going to work,
-    # unless we can stop subclassing Array.
     just_works(:puts)
   end
 

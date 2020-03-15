@@ -4,18 +4,25 @@ require 'text-table'
 require 'csv'
 
 module Tablesmith
-  class Table < Array
+  class Table < Tablesmith.delegated_array_class
+    def initialize(array = [])
+      super(array)
+      @array = array
+    end
+
+    # This method_missing is _not_ part of the delegation to the wrapped Array
+    # instance. It's an additional convenience that allows you to call a method
+    # against every instance inside the array with needing to call map. Though
+    # ... this may go away, calling map isn't that hard.
     def method_missing(meth_id, *args)
+      return nil if meth_id == :to_ary
+
       count = 1
-      map do |t|
+      @array.map do |t|
         $stderr.print '.' if (count.divmod(100)[1]).zero?
         count += 1
         t.send(meth_id, *args)
       end
-    end
-
-    def respond_to_missing?
-      super
     end
 
     def to_s
