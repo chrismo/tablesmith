@@ -14,7 +14,7 @@ describe 'Array Source' do
     [%w[a b c], %w[d e f]].to_table.to_s.should == expected
   end
 
-  def do_just_works_test(_expected, meth_id)
+  def do_just_works_test(meth_id)
     orig_stdout = $stdout
     sio = StringIO.new
     $stdout = sio
@@ -33,7 +33,7 @@ describe 'Array Source' do
       +---+---+---+
     TABLE
 
-    actual = do_just_works_test(expected, meth_id)
+    actual = do_just_works_test(meth_id)
     actual.should == expected
   end
 
@@ -43,6 +43,19 @@ describe 'Array Source' do
 
   it 'just works with puts' do
     just_works(:puts)
+  end
+
+  it 'just works with p' do
+    expected = <<~TABLE
+      +---+---+---+
+      | a | b | c |
+      +---+---+---+
+      | d | e | f |
+      +---+---+---+
+    TABLE
+
+    actual = do_just_works_test(:p)
+    actual.should == "#{expected}\n"
   end
 
   it 'just works with inspect' do

@@ -15,12 +15,18 @@ describe Table do
     b.class.should == Table
   end
 
-  it 'should pass unmatched Array messages to all items' do
+  it 'should no longer pass unmatched Array messages to all items' do
+
+    # earlier pre-1.0 versions implemented method_missing in order to provide
+    # syntactic sugar for calling map on the underlying Array. But as time went
+    # on, it felt too heavy-handed and not worth it.
+
     b = Table.new
     b.length.should == 0
     b << 1
     b << '2'
-    b.to_i.should == [1, 2]
+    b.map(&:to_i).should == [1, 2]
+    -> { b.to_i }.should raise_error(NoMethodError)
   end
 
   it 'should handle empty Array' do
