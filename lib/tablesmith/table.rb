@@ -20,7 +20,13 @@ module Tablesmith
       #
       # It seems a little redundant, but it is what it is, and so we must also
       # cut off calls to `to_ary` in both places.
-      return nil if meth_id == :to_ary
+      return nil if meth_id.to_sym == :to_ary
+
+      super
+    end
+
+    def respond_to_missing?(meth_id, _include_all)
+      return false if meth_id.to_sym == :to_ary
 
       super
     end

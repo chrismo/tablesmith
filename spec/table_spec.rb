@@ -16,7 +16,6 @@ describe Table do
   end
 
   it 'should no longer pass unmatched Array messages to all items' do
-
     # earlier pre-1.0 versions implemented method_missing in order to provide
     # syntactic sugar for calling map on the underlying Array. But as time went
     # on, it felt too heavy-handed and not worth it.
