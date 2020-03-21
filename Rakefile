@@ -11,3 +11,9 @@ desc 'Run the specs.'
 RSpec::Core::RakeTask.new do |t|
   t.pattern = '*_spec.rb'
 end
+
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new(:rubocop)
+
+task default: :rubocop

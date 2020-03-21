@@ -1,6 +1,3 @@
-require:
-- rubocop_lineup
-
 AllCops:
   TargetRubyVersion: 2.3
 
@@ -54,6 +51,9 @@ Layout/ClassStructure:
 Layout/DotPosition:
   EnforcedStyle: trailing
 
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
 Lint/Void:
   Exclude:
     - 'spec/**'
@@ -88,6 +88,9 @@ Metrics/LineLength:
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 15
+
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
 
 Rails/Date:
   Enabled: true

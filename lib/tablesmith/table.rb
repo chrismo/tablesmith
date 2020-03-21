@@ -131,9 +131,7 @@ module Tablesmith
       else
         row = []
         # this relies on Ruby versions where hash retains add order
-        groups.each_pair do |name, span|
-          row << { value: name, align: :center, colspan: span }
-        end
+        groups.each { |name, span| row << {value: name, align: :center, colspan: span} }
         [row, :separator]
       end
     end
