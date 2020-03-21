@@ -39,13 +39,25 @@ require 'tablesmith'
 | 1 | 2 |
 +---+---+
    
-> [{date: '1/1/2020', amt: 35}, {date: '1/2/2020', amt: 80}].to_table
+> t = [{date: '1/1/2020', amt: 35}, {date: '1/2/2020', amt: 80}].to_table
 => +----------+-----+
 |   date   | amt |
 +----------+-----+
 | 1/1/2020 | 35  |
 | 1/2/2020 | 80  |
 +----------+-----+
+                                    
+> # Table delegates to Array, all Array methods are available.
+> t.select! { |h| h[:amt] > 40 }    
+=> [{:date=>"1/2/2020", :amt=>80}]
+
+> t
+=> +----------+-----+
+|   date   | amt |
++----------+-----+
+| 1/2/2020 | 80  |
++----------+-----+
+
            
 > p1 = Person.create(first_name: 'chrismo', custom_attributes: { instrument: 'piano', style: 'jazz' })    
 => #<Person:0x00007fac3eb406a8 id: 1, first_name: "chrismo", last_name: nil, age: nil, custom_attributes: {:instrument=>"piano", :style=>"jazz"}>

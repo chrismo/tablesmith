@@ -4,17 +4,24 @@ require 'text-table'
 require 'csv'
 
 module Tablesmith
-  class Table < Array
-    def method_missing(meth_id, *args)
-      count = 1
-      map do |t|
-        $stderr.print '.' if (count.divmod(100)[1]).zero?
-        count += 1
-        t.send(meth_id, *args)
-      end
+  class Table < Tablesmith.delegated_array_class
+    def initialize(array = [])
+      super(array)
+      @array = array
     end
 
-    def respond_to_missing?
+    def method_missing(meth_id, *args)
+      # In order to support `Kernel::puts` of a `Table`, we need to ignore
+      # `to_ary` calls here as well. See comments on `delegated_array_class`.
+      #
+      # While `DelegatorClass(Array)` proactively defines methods on `Table`
+      # that come from `Array`, it _also_ will pass calls through method_missing
+      # to the target object if it says it will respond to it.
+      #
+      # It seems a little redundant, but it is what it is, and so we must also
+      # cut off calls to `to_ary` in both places.
+      return nil if meth_id == :to_ary
+
       super
     end
 

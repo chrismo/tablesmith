@@ -5,7 +5,7 @@ require 'spec_helper'
 include Tablesmith # rubocop:disable Style/MixinUsage:
 
 describe Table do
-  it 'should subclass array' do
+  it 'should delegate to the internal array' do
     b = Table.new
     b.length.should == 0
     b << 1
@@ -15,12 +15,18 @@ describe Table do
     b.class.should == Table
   end
 
-  it 'should pass unmatched Array messages to all items' do
+  it 'should no longer pass unmatched Array messages to all items' do
+
+    # earlier pre-1.0 versions implemented method_missing in order to provide
+    # syntactic sugar for calling map on the underlying Array. But as time went
+    # on, it felt too heavy-handed and not worth it.
+
     b = Table.new
     b.length.should == 0
     b << 1
     b << '2'
-    b.to_i.should == [1, 2]
+    b.map(&:to_i).should == [1, 2]
+    -> { b.to_i }.should raise_error(NoMethodError)
   end
 
   it 'should handle empty Array' do
@@ -29,7 +35,7 @@ describe Table do
       | (empty) |
       +---------+
     TEXT
-    [].to_table.text_table.to_s.should == expected
+    [].to_table.to_s.should == expected
   end
 
   it 'should handle a simple two row Array' do
@@ -42,7 +48,7 @@ describe Table do
       | d | e | f |
       +---+---+---+
     TABLE
-    actual.to_table.text_table.to_s.should == expected
+    actual.to_table.to_s.should == expected
   end
 
   it 'should output csv' do
