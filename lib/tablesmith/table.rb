@@ -31,9 +31,7 @@ module Tablesmith
       super
     end
 
-    def to_s
-      text_table.to_s
-    end
+    delegate :to_s, to: :text_table
 
     # irb
     def inspect

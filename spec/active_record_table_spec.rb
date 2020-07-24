@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 
+# rubocop:disable Rails/SkipsModelValidations
 describe 'ActiveRecordSource' do
   it 'outputs text table of multiple ActiveRecords' do
     a = Person.new.tap { |c| c.first_name = 'A' }
@@ -360,3 +361,4 @@ describe 'ActiveRecordSource' do
     end
   end
 end
+# rubocop:enable Rails/SkipsModelValidations

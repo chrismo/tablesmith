@@ -1,5 +1,11 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
+  Exclude:
+    - "bin/**/*"
 
 Layout/ClassStructure:
   Enabled: true
@@ -51,6 +57,13 @@ Layout/ClassStructure:
 Layout/DotPosition:
   EnforcedStyle: trailing
 
+Layout/LineLength:
+  Enabled: false
+  Max: 120
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes: http, https
+
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
@@ -78,18 +91,14 @@ Metrics/ClassLength:
     - 'spec/**/*.rb'
     - 'test/**/*.rb'
 
-Metrics/LineLength:
-  Enabled: false
-  Max: 120
-  AllowHeredoc: true
-  AllowURI: true
-  URISchemes: http, https
-
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 15
 
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
+  Enabled: false
+
+Rails/ApplicationRecord:
   Enabled: false
 
 Rails/Date:
@@ -100,7 +109,7 @@ Rails/RefuteMethods:
   Enabled: true
 
 Rails/TimeZone:
-  Enabled: true
+  Enabled: false
   EnforcedStyle: flexible
 
 Style/ClassAndModuleChildren:
@@ -113,7 +122,7 @@ Style/DocumentationMethod:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: when_needed
+  EnforcedStyle: always
   Enabled: true
 
 # Technically this performs better, and I got no problem with it.
