@@ -4,6 +4,7 @@ require:
 
 AllCops:
   TargetRubyVersion: 2.4
+  NewCops: disable
   Exclude:
     - "bin/**/*"
 
@@ -104,6 +105,9 @@ Rails/ApplicationRecord:
 Rails/Date:
   Enabled: true
   EnforcedStyle: flexible
+
+Rails/Delegate:
+  Enabled: false
 
 Rails/RefuteMethods:
   Enabled: true
