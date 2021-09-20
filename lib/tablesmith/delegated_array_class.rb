@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'delegate'
+
 module Tablesmith
   # This adjustment to `DelegateClass(Array)` is necessary to allow calling puts
   # on a `Tablesmith::Table` and still get the table output, rather than the
