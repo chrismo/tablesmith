@@ -34,6 +34,8 @@ module Tablesmith::HashRowsSource
     when Tablesmith::Column
       row[col_or_hash.display_name] = deep_hash[col_or_hash.name].to_s
     when Hash
+      # this isn't used yet it seems
+
       col_or_hash.each_pair do |sub_hash_key, cols_or_hash|
         [cols_or_hash].flatten.each do |inner_col_or_hash|
           value_from_hash(row, deep_hash[sub_hash_key], inner_col_or_hash)

@@ -64,16 +64,17 @@ describe 'HashRowsSource' do
       +---+---+---+
     TABLE
     b = [{ a: 1, b: { c: 2, d: 2 } }].to_table
-    def b.columns
-      [
-        Column.new(name: :a),
-        { b: [
-          Column.new(name: :c)
-        ] }
-      ]
-    end
+    # def b.columns
+    #   [
+    #     Column.new(name: :a),
+    #     { b: [
+    #       Column.new(name: :c)
+    #     ] }
+    #   ]
+    # end
 
     # this would be nice.
+    # should be able to re-use what happens with ActiveRecord
     b.to_s.should == expected
   end
 
